@@ -17,6 +17,9 @@
 - [第2篇:MoveIt / ros2_control 配置体系精读 + 真机执行链路完整侦破](./02_moveit_ros2_control_architecture_and_real_hardware_bridge.md)
   逐个精读 `nova5_moveit/config/` 下的配置文件(SRDF、kinematics.yaml、moveit_controllers.yaml、ros2_controllers.yaml 等),并通过完整下载源码排查,定位到 Dobot SDK 真正用来驱动真机的桥梁代码(`action_move_server.py`),搞清楚它跟标准 ros2_control 架构的具体差异和已知弱点,并据此提出一个可用于 WARA 项目定量评估的分析方向(规划路径 vs 实际执行路径的轨迹跟踪误差对比)。
 
+- [第3篇:手写 MoveGroup Action Client 实战 + demo 环境踩坑排查全记录](./03_hand_written_action_client_and_demo_debugging.md)
+  不依赖 RViz 鼠标拖拽,自己写 Python 代码(rclpy action client)直接调用 MoveIt 的标准 action 接口,逐字段讲清楚 `MotionPlanRequest`/`PlanningOptions`/`Constraints` 等消息结构背后的含义;并完整记录了一次从 `CONTROL_FAILED(-4)` 报错到最终跑通成功的环境排查过程(缺包、终端/进程环境未刷新、容器镜像与 Dockerfile 不同步),沉淀出一套可复用的排查方法论,以及 demo/Gazebo/真机三条执行链路的最终完整对比。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -34,6 +37,7 @@ dobot_nova5_practice/
 ├── README.md                                   本文件
 ├── 01_docker_environment_and_first_simulation.md   环境搭建 + 首次联动仿真跑通记录
 ├── 02_moveit_ros2_control_architecture_and_real_hardware_bridge.md   配置体系精读 + 真机执行链路侦破
+├── 03_hand_written_action_client_and_demo_debugging.md   手写 Action Client 实战 + 环境排查记录
 ├── Dockerfile                                  最终可用的容器构建文件
 └── start_dobot.sh                              一键启动/进入容器脚本
 ```

@@ -23,6 +23,9 @@
 - [第4篇:重建镜像 + Gazebo 链路验证跑通](./04_rebuild_image_and_gazebo_verified.md)
   用更新后的 `Dockerfile` 重建镜像(补齐 `joint-state-broadcaster`、加共享目录挂载),证实第3篇里 Gazebo 控制器加载失败的根因是旧镜像缺包;通过 `list_controllers`、action client、`/joint_states` 对照三步确认机械臂在 Gazebo 里真实到位,并附上参数化的测试脚本(`scripts/my_move_group_client.py`)。
 
+- [第5篇:从 client 到 Gazebo 关节——ROS2 / MoveIt / ros2_control 整条通信链路梳理](./05_ros2_moveit_ros2_control_communication_flow.md)
+  概念梳理篇:ROS2、MoveIt、ros2_control、Gazebo 各自是谁、怎么分层;话题/服务/action 的区别;`ros2_controllers.yaml` 与 `moveit_controllers.yaml` 逐字段对照(两个文件靠同一个实例名对上);一次运动从 `/move_action` 到 Gazebo 关节的完整数据通路(controller → command interface → `GazeboSystem` → `/joint_states` 回路);真机 `action_move_server.py` 的逻辑与弱点;哪些组件现成、哪些要自己写,以及 WARA 任务层节点的位置。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -42,6 +45,7 @@ dobot_nova5_practice/
 ├── 02_moveit_ros2_control_architecture_and_real_hardware_bridge.md   配置体系精读 + 真机执行链路侦破
 ├── 03_hand_written_action_client_and_demo_debugging.md   手写 Action Client 实战 + 环境排查记录
 ├── 04_rebuild_image_and_gazebo_verified.md   重建镜像 + Gazebo 链路验证
+├── 05_ros2_moveit_ros2_control_communication_flow.md   通信链路与配置体系梳理
 ├── scripts/                                    参数化 action client 测试脚本
 ├── Dockerfile                                  最终可用的容器构建文件
 └── start_dobot.sh                              一键启动/进入容器脚本

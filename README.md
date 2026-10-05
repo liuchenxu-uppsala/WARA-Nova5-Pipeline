@@ -20,6 +20,9 @@
 - [第3篇:手写 MoveGroup Action Client 实战 + demo 环境踩坑排查全记录](./03_hand_written_action_client_and_demo_debugging.md)
   不依赖 RViz 鼠标拖拽,自己写 Python 代码(rclpy action client)直接调用 MoveIt 的标准 action 接口,逐字段讲清楚 `MotionPlanRequest`/`PlanningOptions`/`Constraints` 等消息结构背后的含义;并完整记录了一次从 `CONTROL_FAILED(-4)` 报错到最终跑通成功的环境排查过程(缺包、终端/进程环境未刷新、容器镜像与 Dockerfile 不同步),沉淀出一套可复用的排查方法论,以及 demo/Gazebo/真机三条执行链路的最终完整对比。
 
+- [第4篇:重建镜像 + Gazebo 链路验证跑通](./04_rebuild_image_and_gazebo_verified.md)
+  用更新后的 `Dockerfile` 重建镜像(补齐 `joint-state-broadcaster`、加共享目录挂载),证实第3篇里 Gazebo 控制器加载失败的根因是旧镜像缺包;通过 `list_controllers`、action client、`/joint_states` 对照三步确认机械臂在 Gazebo 里真实到位,并附上参数化的测试脚本(`scripts/my_move_group_client.py`)。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -38,6 +41,8 @@ dobot_nova5_practice/
 ├── 01_docker_environment_and_first_simulation.md   环境搭建 + 首次联动仿真跑通记录
 ├── 02_moveit_ros2_control_architecture_and_real_hardware_bridge.md   配置体系精读 + 真机执行链路侦破
 ├── 03_hand_written_action_client_and_demo_debugging.md   手写 Action Client 实战 + 环境排查记录
+├── 04_rebuild_image_and_gazebo_verified.md   重建镜像 + Gazebo 链路验证
+├── scripts/                                    参数化 action client 测试脚本
 ├── Dockerfile                                  最终可用的容器构建文件
 └── start_dobot.sh                              一键启动/进入容器脚本
 ```

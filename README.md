@@ -32,6 +32,9 @@
 - [第7篇:Jacobian 矩阵与奇异性——原理、构造与用法](./07_jacobian_and_singularity.md)
   M2 任务 2:`Δp ≈ J·Δq` 的来源(一元导数 → 多元偏导 → 小步线性近似);J 每一行/每一列的含义;线速度列 `zᵢ × (pₑ − pᵢ)` 与角速度列 `zᵢ` 的推导(含叉乘计算、为什么姿态用角速度而不是欧拉角导数);代码 `nova5_kinematics.py` 的对应与有限差分校验;正向(`v = J q̇`)与反向(`q̇ = J⁻¹ v`,沿 +x 走 10 cm 的分辨率速度控制)两种用法;奇异性(`det J = 0` 与"6 维独立"、二连杆例子、为什么危险、可操作度、Nova5 在 q5=0 的腕奇异结构、阻尼最小二乘),以及尚未确认几何含义的几处数值奇异。
 
+- [第8篇:逆运动学(IK)——原理、实现与验证](./08_ik_principles_and_verification.md)
+  M2 任务 1 的 IK 部分:IK 为什么难(多解、无解);数值 IK 的牛顿迭代(二连杆演示);"起点"是算法的初始猜测而不是机械臂状态、答案是绝对关节角;灵敏度(奇异值)与阻尼最小二乘 `Jᵀ(JJᵀ+λ²I)⁻¹e` 的来由;步长限制、关节限位、多起点去重;`ik_numeric`/`ik_all`/`pose_error_vec` 代码逐段说明;验证 1:往返验证(单起点 9/10,多起点 10/10,误差 < 0.001 mm);验证 2:与 MoveIt `/compute_ik`(KDL)对比,同一起点下两边得到同一组解,代回 FK 误差 < 0.001 mm,另找到 2 组其他解(含"肘朝上/朝下"多解);假设与局限。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -55,9 +58,13 @@ WARA-Nova5-Pipeline/
 ├── 06_fk_implementation_and_moveit_compute_fk_verification.md   自己实现 FK + 与 /compute_fk 对比
 ├── 06_compare_fk_result.png                    第6篇的运行结果截图
 ├── 07_jacobian_and_singularity.md             Jacobian 与奇异性:原理、构造与用法
+├── 08_ik_principles_and_verification.md       IK 原理、实现与验证
+├── 08_ik_roundtrip_result.png / 08_compare_ik_result.png   第8篇的运行结果截图
 ├── nova5_model.py                              FK 实现(URDF 关节链连乘)
 ├── nova5_kinematics.py                         Jacobian、可操作度、IK(阻尼最小二乘)
 ├── demo_jacobian_usage.py                      Jacobian 用法演示(正向 / 沿直线 / 奇异附近)
+├── ik_roundtrip_simple.py                      IK 往返验证(不需要 ROS)
+├── compare_ik_simple.py                        自己的 IK 与 MoveIt /compute_ik 对比
 ├── compare_fk_simple.py                        自己的 FK 与 MoveIt /compute_fk 对比脚本
 ├── my_move_group_client.py.py                  参数化 action client 测试脚本(文件名待修正)
 ├── Dockerfile                                  最终可用的容器构建文件

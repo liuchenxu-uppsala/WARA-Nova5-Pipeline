@@ -29,6 +29,9 @@
 - [第6篇:自己实现 FK,并与 MoveIt `/compute_fk` 对比验证](./06_fk_implementation_and_moveit_compute_fk_verification.md)
   M2 任务 1 的 FK 部分:沿 URDF 关节链连乘(`xyz`/`rpy`/`axis` 的含义、Rodrigues 旋转公式)实现 `nova5_model.py`;讲清 `/compute_fk` 是 `move_group` 自带的服务、请求字段和响应内容;用 `compare_fk_simple.py` 对同一组关节角比较位置差和姿态差(含"相对旋转"公式的推导);并说明这个对比能证明什么(实现与 MoveIt 一致)、不能证明什么(URDF 与真机一致)。
 
+- [第7篇:Jacobian 矩阵与奇异性——原理、构造与用法](./07_jacobian_and_singularity.md)
+  M2 任务 2:`Δp ≈ J·Δq` 的来源(一元导数 → 多元偏导 → 小步线性近似);J 每一行/每一列的含义;线速度列 `zᵢ × (pₑ − pᵢ)` 与角速度列 `zᵢ` 的推导(含叉乘计算、为什么姿态用角速度而不是欧拉角导数);代码 `nova5_kinematics.py` 的对应与有限差分校验;正向(`v = J q̇`)与反向(`q̇ = J⁻¹ v`,沿 +x 走 10 cm 的分辨率速度控制)两种用法;奇异性(`det J = 0` 与"6 维独立"、二连杆例子、为什么危险、可操作度、Nova5 在 q5=0 的腕奇异结构、阻尼最小二乘),以及尚未确认几何含义的几处数值奇异。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -51,7 +54,10 @@ WARA-Nova5-Pipeline/
 ├── 05_ros2_moveit_ros2_control_communication_flow.md   通信链路与配置体系梳理
 ├── 06_fk_implementation_and_moveit_compute_fk_verification.md   自己实现 FK + 与 /compute_fk 对比
 ├── 06_compare_fk_result.png                    第6篇的运行结果截图
+├── 07_jacobian_and_singularity.md             Jacobian 与奇异性:原理、构造与用法
 ├── nova5_model.py                              FK 实现(URDF 关节链连乘)
+├── nova5_kinematics.py                         Jacobian、可操作度、IK(阻尼最小二乘)
+├── demo_jacobian_usage.py                      Jacobian 用法演示(正向 / 沿直线 / 奇异附近)
 ├── compare_fk_simple.py                        自己的 FK 与 MoveIt /compute_fk 对比脚本
 ├── my_move_group_client.py.py                  参数化 action client 测试脚本(文件名待修正)
 ├── Dockerfile                                  最终可用的容器构建文件

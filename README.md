@@ -26,6 +26,9 @@
 - [第5篇:从 client 到 Gazebo 关节——ROS2 / MoveIt / ros2_control 整条通信链路梳理](./05_ros2_moveit_ros2_control_communication_flow.md)
   概念梳理篇:ROS2、MoveIt、ros2_control、Gazebo 各自是谁、怎么分层;话题/服务/action 的区别;`ros2_controllers.yaml` 与 `moveit_controllers.yaml` 逐字段对照(两个文件靠同一个实例名对上);一次运动从 `/move_action` 到 Gazebo 关节的完整数据通路(controller → command interface → `GazeboSystem` → `/joint_states` 回路);真机 `action_move_server.py` 的逻辑与弱点;哪些组件现成、哪些要自己写,以及 WARA 任务层节点的位置。
 
+- [第6篇:自己实现 FK,并与 MoveIt `/compute_fk` 对比验证](./06_fk_implementation_and_moveit_compute_fk_verification.md)
+  M2 任务 1 的 FK 部分:沿 URDF 关节链连乘(`xyz`/`rpy`/`axis` 的含义、Rodrigues 旋转公式)实现 `nova5_model.py`;讲清 `/compute_fk` 是 `move_group` 自带的服务、请求字段和响应内容;用 `compare_fk_simple.py` 对同一组关节角比较位置差和姿态差(含"相对旋转"公式的推导);并说明这个对比能证明什么(实现与 MoveIt 一致)、不能证明什么(URDF 与真机一致)。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -39,14 +42,18 @@
 ## 目录结构
 
 ```
-dobot_nova5_practice/
+WARA-Nova5-Pipeline/
 ├── README.md                                   本文件
 ├── 01_docker_environment_and_first_simulation.md   环境搭建 + 首次联动仿真跑通记录
 ├── 02_moveit_ros2_control_architecture_and_real_hardware_bridge.md   配置体系精读 + 真机执行链路侦破
 ├── 03_hand_written_action_client_and_demo_debugging.md   手写 Action Client 实战 + 环境排查记录
 ├── 04_rebuild_image_and_gazebo_verified.md   重建镜像 + Gazebo 链路验证
 ├── 05_ros2_moveit_ros2_control_communication_flow.md   通信链路与配置体系梳理
-├── scripts/                                    参数化 action client 测试脚本
+├── 06_fk_implementation_and_moveit_compute_fk_verification.md   自己实现 FK + 与 /compute_fk 对比
+├── 06_compare_fk_result.png                    第6篇的运行结果截图
+├── nova5_model.py                              FK 实现(URDF 关节链连乘)
+├── compare_fk_simple.py                        自己的 FK 与 MoveIt /compute_fk 对比脚本
+├── my_move_group_client.py.py                  参数化 action client 测试脚本(文件名待修正)
 ├── Dockerfile                                  最终可用的容器构建文件
 └── start_dobot.sh                              一键启动/进入容器脚本
 ```

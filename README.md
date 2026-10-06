@@ -35,6 +35,9 @@
 - [第8篇:逆运动学(IK)——原理、实现与验证](./08_ik_principles_and_verification.md)
   M2 任务 1 的 IK 部分:IK 为什么难(多解、无解);数值 IK 的牛顿迭代(二连杆演示);"起点"是算法的初始猜测而不是机械臂状态、答案是绝对关节角;灵敏度(奇异值)与阻尼最小二乘 `Jᵀ(JJᵀ+λ²I)⁻¹e` 的来由;步长限制、关节限位、多起点去重;`ik_numeric`/`ik_all`/`pose_error_vec` 代码逐段说明;验证 1:往返验证(单起点 9/10,多起点 10/10,误差 < 0.001 mm);验证 2:与 MoveIt `/compute_ik`(KDL)对比,同一起点下两边得到同一组解,代回 FK 误差 < 0.001 mm,另找到 2 组其他解(含"肘朝上/朝下"多解);假设与局限。
 
+- [第9篇:模型对比(自己的模型 vs 仿真器)与 M2 总结](./09_model_comparison_and_m2_summary.md)
+  M2 后两项:用 `verify_model_consistency.py --sim` 在同一组实际关节角下对比自己的 FK、MoveIt `/compute_fk`、Gazebo 侧 TF,发现 Dobot V3 中 Gazebo 用的 `cra_description` xacro 与 MoveIt 用的 `dobot_rviz` URDF 的 joint1、joint4 转轴方向相反(只转这两个关节时末端差 140~170 mm、约 57°);原因、修正(只改两行 + 同步 install)与修正后三者 0.00 mm 一致;能证明什么、不能证明什么;真机对比与 Dockerfile 修正待办;M2 的假设与局限汇总和完成情况。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -60,12 +63,14 @@ WARA-Nova5-Pipeline/
 ├── 07_jacobian_and_singularity.md             Jacobian 与奇异性:原理、构造与用法
 ├── 08_ik_principles_and_verification.md       IK 原理、实现与验证
 ├── 08_ik_roundtrip_result.png / 08_compare_ik_result.png   第8篇的运行结果截图
+├── 09_model_comparison_and_m2_summary.md      模型对比(vs 仿真器)+ M2 假设与局限
 ├── nova5_model.py                              FK 实现(URDF 关节链连乘)
 ├── nova5_kinematics.py                         Jacobian、可操作度、IK(阻尼最小二乘)
 ├── demo_jacobian_usage.py                      Jacobian 用法演示(正向 / 沿直线 / 奇异附近)
 ├── ik_roundtrip_simple.py                      IK 往返验证(不需要 ROS)
 ├── compare_ik_simple.py                        自己的 IK 与 MoveIt /compute_ik 对比
 ├── compare_fk_simple.py                        自己的 FK 与 MoveIt /compute_fk 对比脚本
+├── verify_model_consistency.py                 自己的 FK / MoveIt / Gazebo TF 三方对比(--sim),真机只读对比(--real)
 ├── my_move_group_client.py.py                  参数化 action client 测试脚本(文件名待修正)
 ├── Dockerfile                                  最终可用的容器构建文件
 └── start_dobot.sh                              一键启动/进入容器脚本

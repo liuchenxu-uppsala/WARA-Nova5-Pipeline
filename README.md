@@ -38,6 +38,9 @@
 - [第9篇:模型对比(自己的模型 vs 仿真器)与 M2 总结](./09_model_comparison_and_m2_summary.md)
   M2 后两项:用 `verify_model_consistency.py --sim` 在同一组实际关节角下对比自己的 FK、MoveIt `/compute_fk`、Gazebo 侧 TF,发现 Dobot V3 中 Gazebo 用的 `cra_description` xacro 与 MoveIt 用的 `dobot_rviz` URDF 的 joint1、joint4 转轴方向相反(只转这两个关节时末端差 140~170 mm、约 57°);原因、修正(只改两行 + 同步 install)与修正后三者 0.00 mm 一致;能证明什么、不能证明什么;真机对比与 Dockerfile 修正待办;M2 的假设与局限汇总和完成情况。
 
+- [第10篇:M3 第 1 步——规划场景 + 位姿目标,让机械臂绕开障碍物](./10_m3_step1_pose_goal_obstacles.md)
+  M3 的整体安排;关节目标 vs 位姿目标;MoveIt 收到位姿目标后的流程(KDL IK → 碰撞过滤 → OMPL RRTConnect → 简化 → 时间参数化 → FollowJointTrajectory 执行);RRTConnect 的二维图解与"为什么这样做";用 FK"火柴人"选障碍物位置;`m3_step1_pose_goal_obstacles.py` 逐段说明(规划场景、位姿约束与朝下四元数、两个 `type` 的区别、TF 与姿态误差计算);运行与观察方法。
+
 （后续每次新的实践进展,继续在这里追加链接）
 
 ## 环境
@@ -64,11 +67,14 @@ WARA-Nova5-Pipeline/
 ├── 08_ik_principles_and_verification.md       IK 原理、实现与验证
 ├── 08_ik_roundtrip_result.png / 08_compare_ik_result.png   第8篇的运行结果截图
 ├── 09_model_comparison_and_m2_summary.md      模型对比(vs 仿真器)+ M2 假设与局限
+├── 10_m3_step1_pose_goal_obstacles.md         M3 第1步:规划场景 + 位姿目标
+├── 10_rrtconnect_2d_demo.png / 10_obstacle_choice_stickfigure.png   第10篇的图
 ├── nova5_model.py                              FK 实现(URDF 关节链连乘)
 ├── nova5_kinematics.py                         Jacobian、可操作度、IK(阻尼最小二乘)
 ├── demo_jacobian_usage.py                      Jacobian 用法演示(正向 / 沿直线 / 奇异附近)
 ├── ik_roundtrip_simple.py                      IK 往返验证(不需要 ROS)
 ├── compare_ik_simple.py                        自己的 IK 与 MoveIt /compute_ik 对比
+├── m3_step1_pose_goal_obstacles.py             M3 第1步脚本:桌子+障碍物+位姿目标
 ├── compare_fk_simple.py                        自己的 FK 与 MoveIt /compute_fk 对比脚本
 ├── verify_model_consistency.py                 自己的 FK / MoveIt / Gazebo TF 三方对比(--sim),真机只读对比(--real)
 ├── my_move_group_client.py.py                  参数化 action client 测试脚本(文件名待修正)
